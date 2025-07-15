@@ -1,13 +1,11 @@
-const express = require("express");
-const http = require("http");
-const socketIo = require("socket.io");
-const cors = require("cors");
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+const cors = require('cors');
 
 const app = express();
-app.use(cors());
-
 const server = http.createServer(app);
-const io = socketIo(server, {
+const io = new Server(server, {
   cors: {
     origin: "*",
   }
@@ -15,28 +13,27 @@ const io = socketIo(server, {
 
 let price = 1.2;
 let traders = 0;
-let data = Array.from({ length: 60 }, (_, i) => ({
-  time: Date.now() - (60 - i) * 1000,
-  price
-}));
+let data = [];
 
 setInterval(() => {
-  // Simulate price changes
-  price *= 1 + (Math.random() - 0.5) * 0.001;
-  price = +price.toFixed(5);
-  traders += Math.floor(Math.random() * 3 - 1); // fluctuate
-  traders = Math.max(1, traders);
+  price += (Math.random() - 0.5) * 0.001;
+  traders += Math.floor(Math.random() * 3 - 1); // simulate fluctuation
   data.push({ time: Date.now(), price });
-  data.shift();
+  if (data.length > 60) data.shift();
 
-  io.emit("tick", { price, traders, data });
+  io.emit("tick", { price: parseFloat(price.toFixed(5)), traders, data });
 }, 1000);
 
-io.on("connection", socket => {
-  console.log("Client connected");
+io.on("connection", (socket) => {
+  console.log("User connected");
   socket.emit("tick", { price, traders, data });
 });
 
-server.listen(process.env.PORT || 3000, () => {
-  console.log("Server running");
+app.get("/", (req, res) => {
+  res.send("PatternTrader Server is running!");
+});
+
+const PORT = process.env.PORT || 3000;
+server.listen(PORT, () => {
+  console.log(`Server running on port ${PORT}`);
 });
