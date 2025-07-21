@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="robots" content="NOINDEX,NOFOLLOW,NOARCHIVE">
+  <meta name="theme-color" content="#000000" />
+  <title>Secure Payment – babysbyberry.co.za</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: #f0f0f0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+    .wrapper {
+      display: flex;
+      max-width: 860px;
+      width: 100%;
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 0 25px rgba(0,0,0,0.1);
+    }
+    .left {
+      background: #007bff75;
+      color: rgb(0, 0, 0);
+      padding: 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+    }
+    .left h2 {
+      margin-bottom: 1.5rem;
+    }
+    .amount-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+      width: 100%;
+    }
+    .amount-option {
+      background: rgb(255, 255, 255);
+      padding: 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 600;
+      color: rgb(0, 0, 0);
+      text-align: center;
+      border: 2px solid black;
+      transition: all 0.3s ease;
+    }
+    .amount-option:hover {
+      background: rgba(255,255,255,0.35);
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(255, 255, 255, 0.6);
+    }
+    .amount-option.selected {
+      border-color: #fff;
+      background: rgba(255,255,255,0.35);
+    }
+
+    .right {
+      background: #0a0a23;
+      color: white;
+      padding: 2rem;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .right h1 {
+      font-size: 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .right p {
+      color: #aaa;
+      margin-bottom: 1.5rem;
+    }
+    input[type="number"] {
+      width: 93%;
+      padding: 0.8rem;
+      border: 2px solid #444;
+      border-radius: 8px;
+      font-size: 1rem;
+      background: #1a1a2e;
+      color: white;
+      margin-bottom: 1rem;
+    }
+    input.error { border-color: red; }
+    input.valid { border-color: green; }
+
+    .buttons {
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    button {
+      padding: 0.8rem 1.5rem;
+      font-size: 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      background: white;
+      color: black;
+    }
+    .back-button:hover,
+    .pay-button:hover {
+      background: #b3dcff;
+      transform: scale(1.05);
+      box-shadow: 0 0 12px rgba(0, 174, 255, 0.6);
+    }
+
+    .message {
+      margin-top: 0.5rem;
+      font-size: 0.85rem;
+      color: red;
+      display: none;
+    }
+    .message.success { color: #0f0; }
+
+    footer {
+      margin-top: 1.5rem;
+      font-size: 0.8rem;
+      color: #777;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <div class="wrapper">
+    <!-- Left Blue Banner -->
+    <div class="left">
+      <h2>Select Amount</h2>
+      <div class="amount-grid">
+        <div class="amount-option" data-amount="180">R180</div>
+        <div class="amount-option" data-amount="250">R250</div>
+        <div class="amount-option" data-amount="500">R500</div>
+        <div class="amount-option" data-amount="1000">R1000</div>
+      </div>
+    </div>
+
+    <!-- Right Form -->
+    <div class="right">
+      <h1>Make a Payment</h1>
+      <p>to <strong>www.babysbyberry.co.za</strong></p>
+      <br />
+      <input type="number" id="customAmount" placeholder="Or enter custom amount" min="180" />
+      <div class="message" id="amountMessage"></div>
+      <div class="buttons">
+        <button class="back-button" onclick="history.back()">Back</button>
+        <button class="pay-button" onclick="processPayment()">Pay Now</button>
+      </div>
+      <br />
+      <footer>Payments secured by Yoco</footer>
+    </div>
+  </div>
+
+  <script>
+    const amountOptions = document.querySelectorAll('.amount-option');
+    const customAmountInput = document.getElementById('customAmount');
+    const message = document.getElementById('amountMessage');
+    let selectedAmount = null;
+
+    function showMessage(text, ok = false) {
+      message.style.display = 'block';
+      message.textContent = text;
+      message.className = 'message ' + (ok ? 'success' : '');
+      setTimeout(() => message.style.display = 'none', 3000);
+    }
+
+    function clearMessage() {
+      message.style.display = 'none';
+    }
+
+    amountOptions.forEach(o => {
+      o.addEventListener('click', () => {
+        amountOptions.forEach(x => x.classList.remove('selected'));
+        o.classList.add('selected');
+        selectedAmount = parseFloat(o.dataset.amount);
+        customAmountInput.value = '';
+        customAmountInput.classList.remove('valid', 'error');
+        clearMessage();
+      });
+    });
+
+    customAmountInput.addEventListener('input', () => {
+      amountOptions.forEach(x => x.classList.remove('selected'));
+      selectedAmount = parseFloat(customAmountInput.value);
+      clearMessage();
+      if (isNaN(selectedAmount) || selectedAmount < 180) {
+        customAmountInput.classList.add('error');
+        customAmountInput.classList.remove('valid');
+        showMessage('Minimum deposit is R180', false);
+      } else {
+        customAmountInput.classList.add('valid');
+        customAmountInput.classList.remove('error');
+        showMessage('Amount valid', true);
+      }
+    });
+
+    function processPayment() {
+      if (!selectedAmount || isNaN(selectedAmount) || selectedAmount < 180) {
+        showMessage('Select or enter valid amount ≥ R180', false);
+        return;
+      }
+      window.location.href = `https://pay.yoco.com/wwwbabysbyberrycoza?amount=${selectedAmount}`;
+    }
+
+    // Yoco config
+    window.merchantData = { currency: "ZAR", title: "www.babysbyberry.co.za", vouchersEnabled: true };
+    window.useCheckout = true;
+    window.environment = "production";
+    window.checkoutLink = {};
+    window.paymentRequest = {};
+    window.useBlackbird = false;
+  </script>
+</body>
+</html>
