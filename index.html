@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Secure Access Page</title>
+<style>
+  * {
+    box-sizing: border-box;
+  }
+
+  body {
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #0f172a;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    color: white;
+    padding: 20px;
+  }
+
+  .access-container {
+    display: flex;
+    flex-direction: row;
+    max-width: 900px;
+    width: 100%;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 0 30px rgba(0, 255, 200, 0.2);
+    animation: zoomIn 0.5s ease;
+    background-color: #1e293b;
+  }
+
+  .left-side {
+    background-color: white;
+    color: #0f172a;
+    padding: 40px;
+    width: 50%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+
+  .right-side {
+    background-color: #0f172a;
+    padding: 40px;
+    width: 50%;
+    color: white;
+  }
+
+  h1 {
+    font-size: 28px;
+    color: #000000;
+    margin-bottom: 20px;
+  }
+
+  .left-side h1 {
+    color: #0f172a;
+  }
+
+  .left-side p {
+    color: #334155;
+  }
+
+  .input-group {
+    margin: 20px 0;
+  }
+
+  input[type="password"] {
+    width: 100%;
+    padding: 14px;
+    border-radius: 6px;
+    border: 1px solid #000000;
+    font-size: 16px;
+    background: #f1f5f9;
+    color: #0f172a;
+  }
+
+  button {
+    background: transparent;
+    border: 2px solid #000000;
+    color: #000000;
+    padding: 14px;
+    border-radius: 6px;
+    font-size: 16px;
+    width: 100%;
+    cursor: pointer;
+    transition: 0.3s ease;
+    margin-top: 10px;
+  }
+
+  button:hover {
+    background: #00ffc8;
+    color: #0f172a;
+    transform: scale(1.05);
+    box-shadow: 0 0 15px #00ffc8;
+  }
+
+  .error-message {
+    color: #f87171;
+    margin-top: 15px;
+    display: none;
+  }
+
+  .extra-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-direction: column;
+  }
+
+  .pay-info {
+    text-align: left;
+    background: rgba(255, 255, 255, 0.05);
+    padding: 20px;
+    border-radius: 8px;
+    border: 1px solid #00ffc8;
+  }
+
+  .pay-info h3 {
+    color: #38bdf8;
+    margin-bottom: 10px;
+  }
+
+  .pay-info p {
+    margin-bottom: 8px;
+  }
+
+  .price-tag {
+    color: #22c55e;
+    font-size: 20px;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+
+  @keyframes zoomIn {
+    from {
+      transform: scale(0.95);
+      opacity: 0;
+    }
+    to {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Responsive Styles */
+  @media (max-width: 1024px) {
+    body {
+      padding: 10px;
+    }
+
+    .access-container {
+      flex-direction: column;
+      max-width: 95%;
+    }
+
+    .left-side, .right-side {
+      width: 100%;
+      padding: 30px;
+    }
+
+    h1 {
+      font-size: 24px;
+    }
+
+    input[type="password"],
+    button {
+      font-size: 15px;
+      padding: 12px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    h1 {
+      font-size: 22px;
+    }
+
+    .left-side, .right-side {
+      padding: 20px;
+    }
+
+    input[type="password"],
+    button {
+      font-size: 14px;
+      padding: 10px;
+    }
+
+    .pay-info h3 {
+      font-size: 16px;
+    }
+
+    .price-tag {
+      font-size: 18px;
+    }
+  }
+</style>
+
+</head>
+<body>
+  <div class="access-container">
+    <!-- Left Side -->
+    <div class="left-side">
+      <h1>Restricted Access</h1>
+      <p>Please enter the access code to continue:</p>
+
+      <div class="input-group">
+        <input type="password" id="accessCode" placeholder="Enter access code" autocomplete="off">
+      </div>
+
+      <button onclick="checkAccessCode()">Submit</button>
+
+      <div class="extra-buttons">
+        <button onclick="window.location.href='pin deposit.html'">Deposit</button>
+        <button onclick="window.location.href='https://wa.me/0614640282'">Pay for Signals</button>
+      </div>
+
+      <p id="errorMessage" class="error-message">Incorrect access code. Please try again.</p>
+    </div>
+
+    <!-- Right Side -->
+    <div class="right-side">
+      <div id="paySection" class="pay-info">
+        <h3>Pay for Signals</h3>
+        <p class="price-tag">Amount: R1200</p>
+        <p><strong>Step-by-step Instructions:</strong></p>
+        <ol>
+          <li>Click the <strong>"Deposit"</strong> button on the left.</li>
+          <li>Follow the instructions to make a payment of <strong>R1200</strong>.</li>
+          <li>Use your correct details during the payment (name, email, etc.).</li>
+          <li>After successful deposit, you will receive an <strong>access code</strong>.</li>
+          <li>Enter that access code to gain entry to the <strong>Live Trading Page</strong>.</li>
+          <li>Ensure your payment is legit, verified, and fully processed.</li>
+        </ol>
+        <p>⚠️ Unverified or incorrect payment info will delay access.</p>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function checkAccessCode() {
+      const accessCode = document.getElementById('accessCode').value;
+      const errorMessage = document.getElementById('errorMessage');
+
+      if (accessCode === '1420') {
+        window.location.href = 'homepage.html'; // Redirect to live trading or secured page
+      } else {
+        errorMessage.style.display = 'block';
+        document.getElementById('accessCode').value = '';
+        document.getElementById('accessCode').focus();
+      }
+    }
+
+    document.getElementById('accessCode').addEventListener('keyup', function (event) {
+      if (event.key === 'Enter') {
+        checkAccessCode();
+      }
+    });
+  </script>
+</body>
+</html>
